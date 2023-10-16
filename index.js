@@ -23,13 +23,13 @@ const secret_admin = process.env.JWT_SECRET_ADMIN;
 //MongoDB Connection
 const { MongoClient, ObjectId, ServerApiVersion } = require("mongodb");
 
-const uri = `mongodb+srv://${encodeURIComponent(
-  process.env.MONGO_USER
-)}:${encodeURIComponent(
-  process.env.MONGO_PASSWORD
-)}@cluster-clinica.vzvphhj.mongodb.net/?retryWrites=true&w=majority`;
+// const uri = `mongodb+srv://${encodeURIComponent(
+//   process.env.MONGO_USER
+// )}:${encodeURIComponent(
+//   process.env.MONGO_PASSWORD
+// )}@cluster-clinica.vzvphhj.mongodb.net/?retryWrites=true&w=majority`;
 
-const client = new MongoClient(uri, {
+const client = new MongoClient(process.env.MONGO_URL, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
