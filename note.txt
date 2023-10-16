@@ -1,0 +1,5 @@
+coll.findOne({ _id: 'aaa' }, { name, age })
+data operation on server side 
+data operation on database side 
+
+Prisma 
