@@ -64,8 +64,9 @@ const admin = clinica_db.collection("admin");
 // =================================== Patient Endpoints  =================================== //
 
 //Welcome 
-app.post("/", async function (req, res) {
-  return res.json({message:"Welcome to Clinica API"});
+app.get("/", async function (req, res) {
+ 
+  return res.json({ msg: "Welcome to Clinica API !!!" });
 })
 //Single Patient Register  Endpoint
 app.post("/patients", async function (req, res) {
