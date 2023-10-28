@@ -1413,7 +1413,7 @@ app.post("/admin_register", async function (req, res) {
 
 
 //All Users Endpoint
-app.get("/patients",admin_auth, async function (req, res) {
+app.get("/patients", async function (req, res) {
   const data = await patients.find().limit(20).toArray();
   console.log(data);
   return res.json(data);
