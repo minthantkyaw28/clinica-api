@@ -1429,7 +1429,7 @@ app.get("/patients/:id",admin_auth, async function (req, res) {
 });
 
 //find patient by name 
-app.get("/patients", admin_auth, async function (req, res) {
+app.get("/patients", async function (req, res) {
   const { name } = req.body;
 
   const data = await patients.findOne({ patient_name: name });
