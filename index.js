@@ -152,7 +152,7 @@ const auth = function (req, res, next) {
 };
 
 //patient login endpoint
-app.post("/patients-login", auth, async function (req, res) {
+app.post("/patients-login", async function (req, res) {
   const { patient_email, password } = req.body;
 
   if (!patient_email || !password) {
