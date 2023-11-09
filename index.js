@@ -352,8 +352,8 @@ const doctor_auth = function (req, res, next) {
   }
 };
 
-//patient login endpoint
-app.post("/doctors-login", doctor_auth, async function (req, res) {
+//doctor login endpoint
+app.post("/doctors-login", async function (req, res) {
   const { doctor_email, password } = req.body;
 
   if (!doctor_email || !password) {
@@ -961,7 +961,7 @@ const hospital_auth = function (req, res, next) {
 };
 
 //hospital/clinic login endpoint
-app.post("/hospital_clinic_login", hospital_auth, async function (req, res) {
+app.post("/hospital_clinic_login", async function (req, res) {
   const { hospital_clinic_email, password } = req.body;
 
   if (!hospital_clinic_email || !password) {
