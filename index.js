@@ -1179,20 +1179,58 @@ app.get(
   }
 );
 
-//Add a doctor to Hospital's available_doctor_list
-app.get(
+
+//Register a doctor and Add a doctor to Hospital's available_doctor_list
+//Single Doctor Register Endpoint
+//updated
+app.post(
   "/hospital_clinic_add_doctor/:id",
   hospital_auth,
   async function (req, res) {
+
     const { id } = req.params;
-    const { doctor_id } = req.body;
+
+      const { nrc, name, email, phone, qualification, specialty, password } =
+        req.body;
+
+      //checking the data
+      if (
+        !nrc ||
+        !name ||
+        !email ||
+        !phone ||
+        !qualification ||
+        !specialty ||
+        !password
+      ) {
+        return res.status(400).json({ msg: "required: something !!!" });
+      }
+
+      //hashing the password
+      let hashed_password = await bcrypt.hash(password, 10);
+
+       const doctor_data = {
+         doctor_nrc: nrc,
+         doctor_name: name,
+         doctor_email: email,
+         doctor_phone: phone,
+         doctor_qualification: qualification,
+         doctor_specialty: specialty,
+         assigned_clinic_hospital: [],
+         patient_list: [],
+         doctor_password: hashed_password,
+       };
+
+       const result = await doctors.insertOne(doctor_data);
+    
+    const { doctor_id } = result.insertedId;
 
     const data = await hospitals_clinics.updateOne(
       { _id: new ObjectId(id) },
       { $addToSet: { available_doctor_list: new ObjectId(doctor_id) } }
     );
 
-    return res.json(data);
+    return res.status(201).json(result);
   }
 );
 
