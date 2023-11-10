@@ -70,68 +70,68 @@ app.get("/", async function (req, res) {
   return res.json({ msg: "Welcome to Clinica API !!!" });
 })
 //Single Patient Register  Endpoint
-app.post("/patients", async function (req, res) {
-  const {
-    nrc,
-    name,
-    email,
-    phone,
-    address,
-    dob,
-    sex,
-    height,
-    weight,
-    password,
-  } = req.body;
+// app.post("/patients", async function (req, res) {
+//   const {
+//     nrc,
+//     name,
+//     email,
+//     phone,
+//     address,
+//     dob,
+//     sex,
+//     height,
+//     weight,
+//     password,
+//   } = req.body;
 
-  //checking the data
-  if (
-    !nrc ||
-    !name ||
-    !email ||
-    !phone ||
-    !address ||
-    !dob ||
-    !sex ||
-    !height ||
-    !weight ||
-    !password
-  ) {
-    return res.status(400).json({ msg: "required: something !!!" });
-  }
+//   //checking the data
+//   if (
+//     !nrc ||
+//     !name ||
+//     !email ||
+//     !phone ||
+//     !address ||
+//     !dob ||
+//     !sex ||
+//     !height ||
+//     !weight ||
+//     !password
+//   ) {
+//     return res.status(400).json({ msg: "required: something !!!" });
+//   }
 
-  //hashing the password
-  let hashed_password = await bcrypt.hash(password, 10);
+//   //hashing the password
+//   let hashed_password = await bcrypt.hash(password, 10);
 
-  const age_finder = (dob) => {
-    const age=new Date().getFullYear() - Number(dob);
-    return age;
-  };
+//   const age_finder = (dob) => {
+//     const age=new Date().getFullYear() - Number(dob);
+//     return age;
+//   };
 
-  const user_data = {
-    patient_nrc: nrc,
-    patient_name: name,
-    patient_email: email,
-    patient_phone: phone,
-    patient_dob: dob,
-    patient_age: age_finder(dob),
-    patient_sex: sex,
-    patient_height: height,
-    patient_weight: weight,
-    patient_address: address || "",
-    allergic_history: [],
-    medical_history: [],
-    visited_doctor_list: [],
-    visited_hospital_clinic_list: [],
-    patient_password: hashed_password,
-    role: "patient",
-    patient_medical_records: [],
-  };
+//   const user_data = {
+//     patient_nrc: nrc,
+//     patient_name: name,
+//     patient_email: email,
+//     patient_phone: phone,
+//     patient_dob: dob,
+//     patient_age: age_finder(dob),
+//     patient_sex: sex,
+//     patient_height: height,
+//     patient_weight: weight,
+//     patient_address: address || "",
+//     allergic_history: [],
+//     medical_history: [],
+//     visited_doctor_list: [],
+//     visited_hospital_clinic_list: [],
+//     patient_password: hashed_password,
+//     role: "patient",
+//     patient_medical_records: [],
+//   };
 
-  const result = await patients.insertOne(user_data);
+//   const result = await patients.insertOne(user_data);
 
-  return res.status(201).json(result);
-});
+//   return res.status(201).json(result);
+// });
 
 //patient login Middleware to check JWT
 const auth = function (req, res, next) {
@@ -306,34 +306,34 @@ app.put("/patients-password/:id", auth, async function (req, res) {
 // =================================== Doctor Endpoints  =================================== //
 
 //Single Doctor Register Endpoint
-app.post("/doctors", async function (req, res) {
-  const { nrc, name, email, phone, qualification, specialty, password } =
-    req.body;
+// app.post("/doctors", async function (req, res) {
+//   const { nrc, name, email, phone, qualification, specialty, password } =
+//     req.body;
 
-  //checking the data
-  if (!nrc || !name || !email || !phone || !qualification || !specialty || !password) {
-    return res.status(400).json({ msg: "required: something !!!" });
-  }
+//   //checking the data
+//   if (!nrc || !name || !email || !phone || !qualification || !specialty || !password) {
+//     return res.status(400).json({ msg: "required: something !!!" });
+//   }
 
-  //hashing the password
-  let hashed_password = await bcrypt.hash(password, 10);
+//   //hashing the password
+//   let hashed_password = await bcrypt.hash(password, 10);
 
-  const doctor_data = {
-    doctor_nrc: nrc,
-    doctor_name: name,
-    doctor_email: email,
-    doctor_phone: phone,
-    doctor_qualification:qualification,
-    doctor_specialty: specialty,
-    assigned_clinic_hospital: [],
-    patient_list: [],
-    doctor_password: hashed_password,
-  };
+//   const doctor_data = {
+//     doctor_nrc: nrc,
+//     doctor_name: name,
+//     doctor_email: email,
+//     doctor_phone: phone,
+//     doctor_qualification:qualification,
+//     doctor_specialty: specialty,
+//     assigned_clinic_hospital: [],
+//     patient_list: [],
+//     doctor_password: hashed_password,
+//   };
 
-  const result = await doctors.insertOne(doctor_data);
+//   const result = await doctors.insertOne(doctor_data);
 
-  return res.status(201).json(result);
-});
+//   return res.status(201).json(result);
+// });
 
 const doctor_auth = function (req, res, next) {
   const { authorization } = req.headers;
@@ -1162,20 +1162,81 @@ app.get(
 );
 
 
-//Add a patient to Hospital's patient_list
-app.get(
+//Register a patient and Add a patient to Hospital's patient_list
+//Single Patient Register Endpoint
+//updated
+app.post(
   "/hospital_clinic_add_patient/:id",
   hospital_auth,
   async function (req, res) {
     const { id } = req.params;
-    const { patient_id } = req.body;
+    const {
+      nrc,
+      name,
+      email,
+      phone,
+      address,
+      dob,
+      sex,
+      height,
+      weight,
+      password,
+    } = req.body;
+
+    //checking the data
+    if (
+      !nrc ||
+      !name ||
+      !email ||
+      !phone ||
+      !address ||
+      !dob ||
+      !sex ||
+      !height ||
+      !weight ||
+      !password
+    ) {
+      return res.status(400).json({ msg: "required: something !!!" });
+    }
+
+    //hashing the password
+    let hashed_password = await bcrypt.hash(password, 10);
+
+    const age_finder = (dob) => {
+      const age = new Date().getFullYear() - Number(dob);
+      return age;
+    };
+
+    const user_data = {
+      patient_nrc: nrc,
+      patient_name: name,
+      patient_email: email,
+      patient_phone: phone,
+      patient_dob: dob,
+      patient_age: age_finder(dob),
+      patient_sex: sex,
+      patient_height: height,
+      patient_weight: weight,
+      patient_address: address || "",
+      allergic_history: [],
+      medical_history: [],
+      visited_doctor_list: [],
+      visited_hospital_clinic_list: [],
+      patient_password: hashed_password,
+      role: "patient",
+      patient_medical_records: [],
+    };
+
+    const result = await patients.insertOne(user_data);
+
+    const patient_id = result.insertedId;
 
     const data = await hospitals_clinics.updateOne(
       { _id: new ObjectId(id) },
       { $addToSet: { patient_list: new ObjectId(patient_id) } }
     );
 
-    return res.json(data);
+    return res.status(201).json(data);
   }
 );
 
@@ -1397,7 +1458,7 @@ const admin_auth = function (req, res, next) {
 };
 
 //Admin login endpoint
-app.post("/admin_login", admin_auth, async function (req, res) {
+app.post("/admin_login", async function (req, res) {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -1451,7 +1512,7 @@ app.post("/admin_register", async function (req, res) {
 
 
 //All Users Endpoint
-app.get("/patients", async function (req, res) {
+app.get("/patients",admin_auth, async function (req, res) {
   const data = await patients.find().limit(20).toArray();
   console.log(data);
   return res.json(data);
@@ -1519,7 +1580,43 @@ app.get("/medical_records_by_patient_name", admin_auth, async function (req, res
 });
 
 
+//Single Doctor Register at SuperAdmin Endpoint
+app.post("/doctors", admin_auth, async function (req, res) {
+  const { nrc, name, email, phone, qualification, specialty, password } =
+    req.body;
 
+  //checking the data
+  if (
+    !nrc ||
+    !name ||
+    !email ||
+    !phone ||
+    !qualification ||
+    !specialty ||
+    !password
+  ) {
+    return res.status(400).json({ msg: "required: something !!!" });
+  }
+
+  //hashing the password
+  let hashed_password = await bcrypt.hash(password, 10);
+
+  const doctor_data = {
+    doctor_nrc: nrc,
+    doctor_name: name,
+    doctor_email: email,
+    doctor_phone: phone,
+    doctor_qualification: qualification,
+    doctor_specialty: specialty,
+    assigned_clinic_hospital: [],
+    patient_list: [],
+    doctor_password: hashed_password,
+  };
+
+  const result = await doctors.insertOne(doctor_data);
+
+  return res.status(201).json(result);
+});
 
 //All doctors Endpoint
 app.get("/doctors", admin_auth, async function (req, res) {
