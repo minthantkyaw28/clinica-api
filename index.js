@@ -1223,7 +1223,7 @@ app.post(
 
        const result = await doctors.insertOne(doctor_data);
     
-    const { doctor_id } = result.insertedId;
+    const doctor_id=result.insertedId;
 
     const data = await hospitals_clinics.updateOne(
       { _id: new ObjectId(id) },
