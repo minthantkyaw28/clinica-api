@@ -1689,7 +1689,7 @@ app.get("/hospital_clinic/:id", admin_auth, async function (req, res) {
 
 //Create Single hospital-Clinic Endpoint by Admin
 //admin_auth,
-app.post("/hospital_clinic",  async function (req, res) {
+app.post("/hospital_clinic", admin_auth, async function (req, res) {
   const { name, email, phone, address, password } = req.body;
 
   //checking the data
