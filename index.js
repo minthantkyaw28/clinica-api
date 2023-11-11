@@ -1509,6 +1509,68 @@ app.post("/admin_register", async function (req, res) {
   return res.status(201).json(result);
 });
 
+app.post("/patients",admin_auth, async function (req, res) {
+  const {
+    nrc,
+    name,
+    email,
+    phone,
+    address,
+    dob,
+    sex,
+    height,
+    weight,
+    password,
+  } = req.body;
+
+  //checking the data
+  if (
+    !nrc ||
+    !name ||
+    !email ||
+    !phone ||
+    !address ||
+    !dob ||
+    !sex ||
+    !height ||
+    !weight ||
+    !password
+  ) {
+    return res.status(400).json({ msg: "required: something !!!" });
+  }
+
+  //hashing the password
+  let hashed_password = await bcrypt.hash(password, 10);
+
+  const age_finder = (dob) => {
+    const age=new Date().getFullYear() - Number(dob);
+    return age;
+  };
+
+  const user_data = {
+    patient_nrc: nrc,
+    patient_name: name,
+    patient_email: email,
+    patient_phone: phone,
+    patient_dob: dob,
+    patient_age: age_finder(dob),
+    patient_sex: sex,
+    patient_height: height,
+    patient_weight: weight,
+    patient_address: address || "",
+    allergic_history: [],
+    medical_history: [],
+    visited_doctor_list: [],
+    visited_hospital_clinic_list: [],
+    patient_password: hashed_password,
+    role: "patient",
+    patient_medical_records: [],
+  };
+
+  const result = await patients.insertOne(user_data);
+
+  return res.status(201).json(result);
+});
 
 
 //All Users Endpoint
