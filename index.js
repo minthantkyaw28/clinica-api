@@ -821,6 +821,7 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
       patient_body_temperature: patient_body_temperature,
       doctor_recommendation: doctor_recommendation,
       doctor_medication_list: doctor_medication_list,
+      created_time:new Date().toLocaleString(),
     };
 
     const result = await medical_records.insertOne(medical_record_data);
@@ -1225,6 +1226,7 @@ app.post(
       patient_password: hashed_password,
       role: "patient",
       patient_medical_records: [],
+      created_time:new Date().toLocaleString(),
     };
 
     const result = await patients.insertOne(user_data);
@@ -1280,6 +1282,7 @@ app.post(
          assigned_clinic_hospital: [],
          patient_list: [],
          doctor_password: hashed_password,
+         created_time:new Date().toLocaleString(),
        };
 
        const result = await doctors.insertOne(doctor_data);
@@ -1419,6 +1422,7 @@ app.post("/medical_records", async function (req, res) {
     patient_body_temperature: patient_body_temperature,
     doctor_recommendation: doctor_recommendation,
     doctor_medication_list: doctor_medication_list,
+    created_time:new Date().toLocaleString(),
   };
 
   const result = await medical_records.insertOne(medical_record_data);
@@ -1565,6 +1569,7 @@ app.post("/patients",admin_auth, async function (req, res) {
     patient_password: hashed_password,
     role: "patient",
     patient_medical_records: [],
+    created_time:new Date().toLocaleString(),
   };
 
   const result = await patients.insertOne(user_data);
@@ -1673,6 +1678,7 @@ app.post("/doctors", admin_auth, async function (req, res) {
     assigned_clinic_hospital: [],
     patient_list: [],
     doctor_password: hashed_password,
+    created_time:new Date().toLocaleString(),
   };
 
   const result = await doctors.insertOne(doctor_data);
@@ -1770,6 +1776,7 @@ app.post("/hospital_clinic", admin_auth, async function (req, res) {
     available_doctor_list: [],
     patient_list: [],
     hospitals_clinics_password: hashed_password,
+    created_time:new Date().toLocaleString(),
   };
 
   const result = await hospitals_clinics.insertOne(hospital_clinic_data);
