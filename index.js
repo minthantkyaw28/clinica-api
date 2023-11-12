@@ -20,7 +20,6 @@ const secret_doctor = process.env.JWT_SECRET_DOCTOR;
 const secret_hospital_clinic = process.env.JWT_SECRET_HOSPITAL_CLINIC;
 const secret_admin = process.env.JWT_SECRET_ADMIN;
 
-const transaction_track = clinica_db.collection("transaction_track");
 
 //MongoDB Connection
 const { MongoClient, ObjectId, ServerApiVersion } = require("mongodb");
@@ -62,6 +61,7 @@ const medical_records = clinica_db.collection("medical_records");
 const hospitals_clinics = clinica_db.collection("hospitals_clinics");
 const admin = clinica_db.collection("admin");
 
+const transaction_track = clinica_db.collection("transaction_track");
 //Routes
 
 // =================================== Patient Endpoints  =================================== //
