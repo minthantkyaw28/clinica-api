@@ -20,6 +20,8 @@ const secret_doctor = process.env.JWT_SECRET_DOCTOR;
 const secret_hospital_clinic = process.env.JWT_SECRET_HOSPITAL_CLINIC;
 const secret_admin = process.env.JWT_SECRET_ADMIN;
 
+const transaction_track = clinica_db.collection("transaction_track");
+
 //MongoDB Connection
 const { MongoClient, ObjectId, ServerApiVersion } = require("mongodb");
 
