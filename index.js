@@ -1291,10 +1291,30 @@ app.post(
     
     const doctor_id=result.insertedId;
 
-    const data = await hospitals_clinics.updateOne(
-      { _id: new ObjectId(id) },
-      { $addToSet: { available_doctor_list: new ObjectId(doctor_id) } }
-    );
+   const doctor_id = result.insertedId;
+
+    try {
+      //add doctor_id to hospital's available doctor list
+      const data = await hospitals_clinics.updateOne(
+        { _id: new ObjectId(id) },
+        { $addToSet: { available_doctor_list: new ObjectId(doctor_id) } }
+      );
+      //add doctor_id to hospital' stransaction_track doctor  list
+      await transaction_track.updateOne(
+        { hospital_id: new ObjectId(id) },
+        {
+           $addToSet: {
+            doctor_list: new Object({
+              doctor_id: new ObjectId(doctor_id),
+              inserted_time: new Date().toLocaleString(),
+            }),
+          },
+        }
+      );
+    } catch (error) {
+      return res.status(401).json({msg:error.message});
+    }
+
 
     return res.status(201).json(result);
   }
