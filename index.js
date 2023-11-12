@@ -1291,7 +1291,7 @@ app.post(
     
     const doctor_id=result.insertedId;
 
-   const doctor_id = result.insertedId;
+   
 
     try {
       //add doctor_id to hospital's available doctor list
