@@ -1228,22 +1228,43 @@ app.post(
       patient_password: hashed_password,
       role: "patient",
       patient_medical_records: [],
-      created_time:new Date().toLocaleString(),
     };
 
     const result = await patients.insertOne(user_data);
 
     const patient_id = result.insertedId;
 
-    const data = await hospitals_clinics.updateOne(
-      { _id: new ObjectId(id) },
-      { $addToSet: { patient_list: new ObjectId(patient_id) } }
-    );
+       try {
+         //add patient_id to hospital's  patient list
+         const data = await hospitals_clinics.updateOne(
+           { _id: new ObjectId(id) },
+           { $addToSet: { patient_list: new ObjectId(patient_id) } }
+         );
+         //add patient_id to hospital' stransaction_track patient list
+         await transaction_track.updateOne(
+           { hospital_id: new ObjectId(id) },
+           {
+             $addToSet: {
+               patient_list: new Object({
+                 patient_id: new ObjectId(patient_id),
+                 inserted_time: new Date().toLocaleDateString(),
+               }),
+             },
+           }
+         );
+       } catch (error) {
+         return res.status(401).json({ msg: error.message });
+       }
 
-    return res.status(201).json(result);
+
+    // const data = await hospitals_clinics.updateOne(
+    //   { _id: new ObjectId(id) },
+    //   { $addToSet: { patient_list: new ObjectId(patient_id) } }
+    // );
+
+    return res.status(201).json(data);
   }
 );
-
 
 //Register a doctor and Add a doctor to Hospital's available_doctor_list
 //Single Doctor Register Endpoint
@@ -1252,46 +1273,42 @@ app.post(
   "/hospital_clinic_add_doctor/:id",
   hospital_auth,
   async function (req, res) {
-
     const { id } = req.params;
 
-      const { nrc, name, email, phone, qualification, specialty, password } =
-        req.body;
+    const { nrc, name, email, phone, qualification, specialty, password } =
+      req.body;
 
-      //checking the data
-      if (
-        !nrc ||
-        !name ||
-        !email ||
-        !phone ||
-        !qualification ||
-        !specialty ||
-        !password
-      ) {
-        return res.status(400).json({ msg: "required: something !!!" });
-      }
+    //checking the data
+    if (
+      !nrc ||
+      !name ||
+      !email ||
+      !phone ||
+      !qualification ||
+      !specialty ||
+      !password
+    ) {
+      return res.status(400).json({ msg: "required: something !!!" });
+    }
 
-      //hashing the password
-      let hashed_password = await bcrypt.hash(password, 10);
+    //hashing the password
+    let hashed_password = await bcrypt.hash(password, 10);
 
-       const doctor_data = {
-         doctor_nrc: nrc,
-         doctor_name: name,
-         doctor_email: email,
-         doctor_phone: phone,
-         doctor_qualification: qualification,
-         doctor_specialty: specialty,
-         assigned_clinic_hospital: [],
-         patient_list: [],
-         doctor_password: hashed_password,
-         created_time:new Date().toLocaleString(),
-       };
+    const doctor_data = {
+      doctor_nrc: nrc,
+      doctor_name: name,
+      doctor_email: email,
+      doctor_phone: phone,
+      doctor_qualification: qualification,
+      doctor_specialty: specialty,
+      assigned_clinic_hospital: [],
+      patient_list: [],
+      doctor_password: hashed_password,
+    };
 
-       const result = await doctors.insertOne(doctor_data);
-    
-    const doctor_id=result.insertedId;
+    const result = await doctors.insertOne(doctor_data);
 
-   
+    const doctor_id = result.insertedId;
 
     try {
       //add doctor_id to hospital's available doctor list
@@ -1303,10 +1320,10 @@ app.post(
       await transaction_track.updateOne(
         { hospital_id: new ObjectId(id) },
         {
-           $addToSet: {
+          $addToSet: {
             doctor_list: new Object({
               doctor_id: new ObjectId(doctor_id),
-              inserted_time: new Date().toLocaleString(),
+              inserted_time: new Date().toLocaleDateString(),
             }),
           },
         }
@@ -1314,11 +1331,88 @@ app.post(
     } catch (error) {
       return res.status(401).json({msg:error.message});
     }
-
-
     return res.status(201).json(result);
   }
 );
+
+
+//Add Doctor to your hospital System
+app.post(
+  "/add_doctor_account_to_hospital/:id",
+  hospital_auth,
+  async function (req, res) {
+    const { id } = req.params;
+
+    const { doctor_id } = req.body;
+
+    try {
+        await hospitals_clinics.updateOne(
+          { _id: new ObjectId(id) },
+          {
+            $addToSet: {
+              available_doctor_list: new ObjectId(doctor_id),
+            },
+          }
+        );
+
+        const result = await transaction_track.updateOne(
+          { hospital_id: new ObjectId(id) },
+          {
+            $addToSet: {
+              doctor_list: new Object({
+                doctor_id: new ObjectId(doctor_id),
+                inserted_time: new Date().toLocaleDateString(),
+              }),
+            },
+          }
+        );
+
+        return res.status(201).json(result);
+    } catch (error) {
+        return res.status(401).json({ msg: "Doctor is not in clinica system" });
+    }
+  }
+);
+
+//Add Patient to your hospital System
+app.post(
+  "/add_patient_account_to_hospital/:id",
+  hospital_auth,
+  async function (req, res) {
+    const { id } = req.params;
+
+    const { patient_id } = req.body;
+
+    try {
+      await hospitals_clinics.updateOne(
+        { _id: new ObjectId(id) },
+        {
+          $addToSet: {
+            patient_list: new ObjectId(patient_id),
+          },
+        }
+      );
+
+      const result = await transaction_track.updateOne(
+        { hospital_id: new ObjectId(id) },
+        {
+          $addToSet: {
+            patient_list: new Object({
+              patient_id: new ObjectId(patient_id),
+              inserted_time: new Date().toLocaleDateString(),
+            }),
+          },
+        }
+      );
+
+      return res.status(201).json(result);
+    } catch (error) {
+      return res.status(401).json({ msg: "Patient is not in clinica system" });
+    }
+
+  }
+);
+
 
 
 //Hospital/Clinic Email Edit Endpoint
