@@ -1234,9 +1234,9 @@ app.post(
 
     const patient_id = result.insertedId;
 
-       try {
+      
          //add patient_id to hospital's  patient list
-         const data = await hospitals_clinics.updateOne(
+         await hospitals_clinics.updateOne(
            { _id: new ObjectId(id) },
            { $addToSet: { patient_list: new ObjectId(patient_id) } }
          );
@@ -1252,10 +1252,7 @@ app.post(
              },
            }
          );
-       } catch (error) {
-         return res.status(401).json({ msg: error.message });
-       }
-
+     
 
     // const data = await hospitals_clinics.updateOne(
     //   { _id: new ObjectId(id) },
@@ -1310,7 +1307,7 @@ app.post(
 
     const doctor_id = result.insertedId;
 
-    try {
+    
       //add doctor_id to hospital's available doctor list
       const data = await hospitals_clinics.updateOne(
         { _id: new ObjectId(id) },
@@ -1328,9 +1325,7 @@ app.post(
           },
         }
       );
-    } catch (error) {
-      return res.status(401).json({msg:error.message});
-    }
+  
     return res.status(201).json(result);
   }
 );
