@@ -1259,7 +1259,7 @@ app.post(
     //   { $addToSet: { patient_list: new ObjectId(patient_id) } }
     // );
 
-    return res.status(201).json(data);
+    return res.status(201).json(result);
   }
 );
 
