@@ -1781,16 +1781,14 @@ app.post("/hospital_clinic", admin_auth, async function (req, res) {
 
   const result = await hospitals_clinics.insertOne(hospital_clinic_data);
 
-    if (result) {
-    const hospital_clinic_transaction = {
+ 
+  const hospital_clinic_transaction = {
       hospital_id: new ObjectId(result.insertedId),
       doctor_list: [],
       patient_list: [],
     };
-    await transaction_track.insertOne(hospital_clinic_transaction);
-  } else {
-    return res.status(401).json({ msg: "No transaction data created" });
-  }
+  await transaction_track.insertOne(hospital_clinic_transaction);
+ 
 
   return res.status(201).json(result);
 });
