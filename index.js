@@ -1782,12 +1782,17 @@ app.post("/hospital_clinic", admin_auth, async function (req, res) {
   const result = await hospitals_clinics.insertOne(hospital_clinic_data);
 
  
-  const hospital_clinic_transaction = {
-      hospital_id: new ObjectId(result.insertedId),
-      doctor_list: [],
-      patient_list: [],
-    };
-  await transaction_track.insertOne(hospital_clinic_transaction);
+  try {
+      const hospital_clinic_transaction = {
+        hospital_id: new ObjectId(result.insertedId),
+        doctor_list: [],
+        patient_list: [],
+      };
+      await transaction_track.insertOne(hospital_clinic_transaction);
+  } catch (error) {
+    return res.status(401).json({msg:error.message});
+  }
+
  
 
   return res.status(201).json(result);
