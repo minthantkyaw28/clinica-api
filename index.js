@@ -875,13 +875,11 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
 //Get patient profile & several medical records //  13/Nov/2023 
 app.get("/patient_profile_and_medical_records", doctor_auth, async function (req, res) {
   const {
-    patient_id,
-    doctor_id,
+    patient_id
   } = req.body;
 
     if (
-      !patient_id ||
-      !doctor_id 
+      !patient_id
     ) {
       return res.status(400).json({ msg: "required: something !!!" });
     }
@@ -891,8 +889,7 @@ app.get("/patient_profile_and_medical_records", doctor_auth, async function (req
 
       const patient_medical_records = await medical_records
         .find({
-          patient_id: patient_id,
-          doctor_id: doctor_id,
+          patient_id: patient_id
         })
         .toArray()
         .sort({ record_created_date : -1 });
