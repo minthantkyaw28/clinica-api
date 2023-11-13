@@ -811,7 +811,7 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
     }
 
     const medical_record_data = {
-      record_created_date: new Date("YYYY-MM-DD"),
+      record_created_date: new Date(),
       patient_id: new ObjectId(patient_id),
       doctor_id: new ObjectId(doctor_id),
       hospital_clinic_id: new ObjectId(hospital_clinic_id),
@@ -869,6 +869,40 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
   } catch (error) {
     return res.status(401).json({ msg: err.message });
   }
+});
+
+
+//Get patient profile & several medical records //  13/Nov/2023 
+app.get("/patient_profile_and_medical_records", doctor_auth, async function (req, res) {
+  const {
+    patient_id,
+    doctor_id,
+  } = req.body;
+
+    if (
+      !patient_id ||
+      !doctor_id 
+    ) {
+      return res.status(400).json({ msg: "required: something !!!" });
+    }
+
+    try {
+      const patient_profile=await patients.findOne({_id:new ObjectId(patient_id)});
+
+      const patient_medical_records = await medical_records
+        .find({
+          patient_id: patient_id,
+          doctor_id: doctor_id,
+        })
+        .toArray()
+        .sort({ record_created_date : -1 });
+
+      return res.status(201).json({patient_profile,patient_medical_records});
+    
+    } catch (error) {
+      return res.status(401).json({ msg:error.message });
+    }
+
 });
 
 //Doctor Profile Endpoint
