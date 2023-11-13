@@ -889,7 +889,7 @@ app.get("/patient_profile_and_medical_records", doctor_auth, async function (req
 
       const patient_medical_records = await medical_records
         .aggregate({
-          patient_id: patient_id
+          patient_id: new ObjectId(patient_id)
         })
         .toArray()
         .sort({ record_created_date : -1 });
