@@ -888,7 +888,7 @@ app.get("/patient_profile_and_medical_records", doctor_auth, async function (req
       const patient_profile=await patients.findOne({_id:new ObjectId(patient_id)});
 
       const patient_medical_records = await medical_records
-        .find({
+        .aggregate({
           patient_id: patient_id
         })
         .toArray()
