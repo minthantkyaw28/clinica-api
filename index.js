@@ -894,9 +894,8 @@ app.get("/patient_profile_and_medical_records", doctor_auth, async function (req
               patient_id: new ObjectId(patient_id),
             },
           },
-        ])
-        .toArray()
-        .sort({ record_created_date : -1 });
+        ]).sort({ record_created_date : -1 })
+        .toArray();
 
       return res.status(201).json({patient_profile,patient_medical_records});
     
