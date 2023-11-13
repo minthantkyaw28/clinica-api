@@ -894,6 +894,40 @@ app.get("/patient_profile_and_medical_records", doctor_auth, async function (req
               patient_id: new ObjectId(patient_id),
             },
           },
+          {
+            $lookup: {
+              from: "doctors",
+              localField: "doctor_id",
+              foreignField: "_id",
+              as: "doctor",
+            },
+          },
+          {
+            $unwind: "$doctor",
+          },
+          {
+            $lookup: {
+              from: "hospitals_clinics",
+              localField: "hospital_clinic_id",
+              foreignField: "_id",
+              as: "hospital_clinic",
+            },
+          },
+          {
+            $unwind: "$hospital_clinic",
+          },
+          {
+            $addFields: {
+              doctor_name: "$doctor.doctor_name",
+              hospital_clinic_name: "$hospital_clinic.hospital_clinic_name",
+            },
+          },
+          {
+            $project: {
+              doctor: 0,
+              hospital_clinic: 0,
+            },
+          },
         ]).sort({ record_created_date : -1 })
         .toArray();
 
