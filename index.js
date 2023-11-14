@@ -1551,7 +1551,11 @@ app.get(
     const { date_time } = req.body;
 
     const data = await medical_records
-      .find({ _id: new ObjectId(id), record_created_date: date_time })
+        .aggregate([
+        {
+          $match: { _id: new ObjectId(id), record_created_date: date_time }
+        },
+      ])
       .toArray();
 
     return res.json(data);
