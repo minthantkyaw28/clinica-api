@@ -1538,7 +1538,21 @@ app.put("/hospital-clinic-password/:id", async function (req, res) {
 });
 
 
+//Search medical record by hospital_id and date time 
+app.get(
+  "/medical_records_by_date_at_hospital/:id",
+  hospital_auth,
+  async function (req, res) {
+    const { id } = req.params;
+    const { date_time } = req.body;
 
+    const data = await medical_records
+      .find({ _id: new ObjectId(id), record_created_date: new Date(date_time) })
+      .toArray();
+
+    return res.json(data);
+  }
+);
 
 
 
