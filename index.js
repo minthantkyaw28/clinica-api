@@ -827,7 +827,6 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
       patient_body_temperature: patient_body_temperature,
       doctor_recommendation: doctor_recommendation,
       doctor_medication_list: doctor_medication_list,
-      created_time:new Date().toLocaleString(),
     };
 
     const result = await medical_records.insertOne(medical_record_data);
