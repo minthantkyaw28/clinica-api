@@ -811,7 +811,11 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
     }
 
     const medical_record_data = {
-      record_created_date: new Date(),
+      record_created_date:new Date().toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+      }),
       patient_id: new ObjectId(patient_id),
       doctor_id: new ObjectId(doctor_id),
       hospital_clinic_id: new ObjectId(hospital_clinic_id),
@@ -1547,7 +1551,7 @@ app.get(
     const { date_time } = req.body;
 
     const data = await medical_records
-      .find({ _id: new ObjectId(id), record_created_date: new Date(date_time) })
+      .find({ _id: new ObjectId(id), record_created_date: date_time })
       .toArray();
 
     return res.json(data);
