@@ -681,7 +681,7 @@ app.get(
   "/single_medical_record_of_patient_doctor_assigned_hospital",
   doctor_auth,
   async function (req, res) {
-    const { _id, doctor_id, hospital_clinic_id, patient_id, limit } = req.body;
+    const { _id, doctor_id, hospital_clinic_id, patient_id } = req.body;
 
     const data = await medical_records
       .aggregate([
@@ -740,9 +740,7 @@ app.get(
             hospital_clinic: 0,
           },
         },
-      ])
-      .limit(Number(limit))
-      .toArray();
+      ]).toArray();
 
     return res.json(data);
   }
