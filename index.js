@@ -809,11 +809,12 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
     }
 
     const medical_record_data = {
-      record_created_date:new Date().toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "numeric",
-        year: "numeric",
-      }),
+      // record_created_date:new Date().toLocaleDateString("en-GB", {
+      //   day: "numeric",
+      //   month: "numeric",
+      //   year: "numeric",
+      // }),
+      record_created_date:new Date().toISOString(),
       patient_id: new ObjectId(patient_id),
       doctor_id: new ObjectId(doctor_id),
       hospital_clinic_id: new ObjectId(hospital_clinic_id),
@@ -1550,7 +1551,7 @@ app.get(
     const data = await medical_records
         .aggregate([
         {
-          $match: {  hospital_clinic_id: new ObjectId(id), record_created_date: date_time }
+          $match: {  hospital_clinic_id: new ObjectId(id), record_created_date:new Date().toISOString(date_time) }
         },
       ])
       .toArray();
