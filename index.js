@@ -22,7 +22,7 @@ const secret_admin = process.env.JWT_SECRET_ADMIN;
 
 
 //MongoDB Connection
-const { MongoClient, ObjectId, ServerApiVersion } = require("mongodb");
+const { MongoClient, ObjectId, ServerApiVersion, ISODate } = require("mongodb");
 
 // const uri = `mongodb+srv://${encodeURIComponent(
 //   process.env.MONGO_USER
@@ -1551,7 +1551,7 @@ app.get(
     const data = await medical_records
         .aggregate([
         {
-          $match: {  hospital_clinic_id: new ObjectId(id), record_created_date:new Date(date_time) }
+          $match: {  hospital_clinic_id: new ObjectId(id), record_created_date:ISODate(date_time) }
         },
       ])
       .toArray();
