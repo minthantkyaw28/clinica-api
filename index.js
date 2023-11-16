@@ -61,7 +61,10 @@ const medical_records = clinica_db.collection("medical_records");
 const hospitals_clinics = clinica_db.collection("hospitals_clinics");
 const admin = clinica_db.collection("admin");
 
-const transaction_track = clinica_db.collection("transaction_track");
+//const transaction_track = clinica_db.collection("transaction_track");
+
+const doctor_transactions = clinica_db.collection("doctor_transactions");
+const patient_transactions = clinica_db.collection("patient_transactions");
 //Routes
 
 // =================================== Patient Endpoints  =================================== //
@@ -1315,18 +1318,23 @@ app.post(
            { _id: new ObjectId(id) },
            { $push: { patient_list: new ObjectId(patient_id) } }
          );
-         //add patient_id to hospital' stransaction_track patient list
-         await transaction_track.updateOne(
-           { hospital_id: new ObjectId(id) },
-           {
-             $push: {
-               patient_list: new Object({
-                 patient_id: new ObjectId(patient_id),
-                 inserted_time: new Date(),
-               }),
-             },
-           }
-         );
+         // //add patient_id to hospital' stransaction_track patient list
+         // await transaction_track.updateOne(
+         //   { hospital_id: new ObjectId(id) },
+         //   {
+         //     $push: {
+         //       patient_list: new Object({
+         //         patient_id: new ObjectId(patient_id),
+         //         inserted_time: new Date(),
+         //       }),
+         //     },
+         //   }
+         // );
+
+      const result = await patient_transactions.insertOne(
+        { hospital_id: new ObjectId(id), 
+         patient_id: new ObjectId(patient_id), 
+         inserted_time: new Date(), });
      
 
     // const data = await hospitals_clinics.updateOne(
@@ -1390,17 +1398,22 @@ app.post(
         { $push: { available_doctor_list: new ObjectId(doctor_id) } }
       );
       //add doctor_id to hospital' stransaction_track doctor  list
-      await transaction_track.updateOne(
-        { hospital_id: new ObjectId(id) },
-        {
-          $push: {
-            doctor_list: new Object({
-              doctor_id: new ObjectId(doctor_id),
-              inserted_time: new Date(),
-            }),
-          },
-        }
-      );
+      // await transaction_track.updateOne(
+      //   { hospital_id: new ObjectId(id) },
+      //   {
+      //     $push: {
+      //       doctor_list: new Object({
+      //         doctor_id: new ObjectId(doctor_id),
+      //         inserted_time: new Date(),
+      //       }),
+      //     },
+      //   }
+      // );
+
+      const result = await doctor_transactions.insertOne(
+        { hospital_id: new ObjectId(id), 
+         doctor_id: new ObjectId(doctor_id), 
+         inserted_time: new Date(), });
   
     return res.status(201).json(result);
   }
@@ -1426,17 +1439,22 @@ app.post(
           }
         );
 
-        const result = await transaction_track.updateOne(
-          { hospital_id: new ObjectId(id) },
-          {
-            $push: {
-              doctor_list: new Object({
-                doctor_id: new ObjectId(doctor_id),
-                inserted_time: new Date(),
-              }),
-            },
-          }
-        );
+        // const result = await transaction_track.updateOne(
+        //   { hospital_id: new ObjectId(id) },
+        //   {
+        //     $push: {
+        //       doctor_list: new Object({
+        //         doctor_id: new ObjectId(doctor_id),
+        //         inserted_time: new Date(),
+        //       }),
+        //     },
+        //   }
+        // );
+
+       const result = await doctor_transactions.insertOne(
+        { hospital_id: new ObjectId(id), 
+         doctor_id: new ObjectId(doctor_id), 
+         inserted_time: new Date(), });
 
         return res.status(201).json(result);
     } catch (error) {
@@ -1464,17 +1482,10 @@ app.post(
         }
       );
 
-      const result = await transaction_track.updateOne(
-        { hospital_id: new ObjectId(id) },
-        {
-          $push: {
-            patient_list: new Object({
-              patient_id: new ObjectId(patient_id),
-              inserted_time: new Date(),
-            }),
-          },
-        }
-      );
+      const result = await patient_transactions.insertOne(
+        { hospital_id: new ObjectId(id), 
+         patient_id: new ObjectId(patient_id), 
+         inserted_time: new Date(), });
 
       return res.status(201).json(result);
     } catch (error) {
@@ -1571,88 +1582,15 @@ app.get(
        const record_count = await medical_records
         .countDocuments({ hospital_clinic_id: new ObjectId(id), record_created_date:{ $gte: startOfDay, $lt: endOfDay } });
 
-  //     const doctor_count= await transaction_track.aggregate([
-  //       {
-  //         $match: {
-  //           hospital_id: new ObjectId(id)
-  //         }
-  //       },
-  //       {
-  //   $project: {
-  //     doctor_list: {
-  //       $filter: {
-  //         input: "$doctor_list",
-  //         as: "doctor",
-  //         cond: {
-  //           $eq: ["$$doctor.inserted_time",{ $gte: startOfDay, $lt: endOfDay }]
-  //         }
-  //       }
-  //     },
+    const doctor_count=await doctor_transactions
+      .countDocuments({ hospital_clinic_id: new ObjectId(id), inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
 
-  //   }
-  // },
-  //       {
-  //   $addFields: {
-  //     doctor_count: { $size: "$doctor_list" },
-  //   }
-  // }
-  //     ]).toArray();
-
-     // const doctor_count= await transaction_track.aggregate([
-     //    {
-     //      $match: {
-     //        hospital_id: new ObjectId(id)
-     //      }
-     //    },
-     //    {
-     //      $unwind: "$doctor_list"
-     //    },
-     //    {
-     //      $match: {
-     //        "doctor_list.inserted_time": { $gte: startOfDay, $lt: endOfDay }
-     //      }
-     //    },
-     //    {
-     //      $group: {
-     //        _id: "$_id",
-     //        doctorCount: { $sum: 1 }
-     //      }
-     //    }
-     //  ]);
-
-    //  const doctor_count= await transaction_track.aggregate([
-    //     {
-    //       $match: {
-    //         hospital_id: new ObjectId(id)
-    //       }
-    //     },
-    //     {
-    //       $project: {
-    //         doctor_list: {
-    //           $filter: {
-    //             input: "$doctor_list",
-    //             as: "doctor",
-    //             cond: {
-    //               $and: [
-    //                 { $gte: ["$$doctor.inserted_time", startOfDay] },
-    //                 { $lt: ["$$doctor.inserted_time", endOfDay] }
-    //               ]
-    //             }
-    //         }
-    //     }
-    //   }
-    // }
-    //   ]);
+    const patient_count=await patient_transactions
+    .countDocuments({ hospital_clinic_id: new ObjectId(id), inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
 
 
-    const doctor_count=await transaction_track.find({
-      hospital_id: new ObjectId(id),
-      doctor_list: { $elemMatch: { inserted_time: { $gte: startOfDay, $lt: endOfDay } } }
-});
-
-    var doctorCount = doctor_count.toArray();
     
-    return res.json({record_count,doctorCount});
+    return res.json({record_count,doctor_count,patient_count});
   }
 );
 
