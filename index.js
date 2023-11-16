@@ -1596,7 +1596,7 @@ app.get(
       doctor_count: { $size: "$doctor_list" },
     }
   }
-      ]);
+      ]).toArray();
 
      // const doctor_count= await transaction_track.aggregate([
      //    {
