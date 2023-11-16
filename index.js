@@ -1649,8 +1649,10 @@ app.get(
       hospital_id: new ObjectId(id),
       doctor_list: { $elemMatch: { inserted_time: { $gte: startOfDay, $lt: endOfDay } } }
 });
+
+    var doctorCount = doctor_count.toArray()[0];
     
-    return res.json({record_count,doctor_count});
+    return res.json({record_count,doctorCount});
   }
 );
 
