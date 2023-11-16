@@ -1650,7 +1650,7 @@ app.get(
       doctor_list: { $elemMatch: { inserted_time: { $gte: startOfDay, $lt: endOfDay } } }
 });
 
-    var doctorCount = doctor_count.toArray()[0];
+    var doctorCount = doctor_count.toArray();
     
     return res.json({record_count,doctorCount});
   }
