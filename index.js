@@ -683,7 +683,8 @@ app.get(
   async function (req, res) {
     const { _id, doctor_id, hospital_clinic_id, patient_id } = req.body;
 
-    const data = await medical_records
+    try{
+       const data = await medical_records
       .aggregate([
         {
           $match: {
@@ -743,6 +744,10 @@ app.get(
       ]).toArray();
 
     return res.json(data);
+    }catch(err){
+       return res.json({msg:"Smth wrong motherfucker"});
+    }
+    
   }
 );
 
