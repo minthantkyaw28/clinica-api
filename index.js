@@ -1571,32 +1571,32 @@ app.get(
        const record_count = await medical_records
         .countDocuments({ hospital_clinic_id: new ObjectId(id), record_created_date:{ $gte: startOfDay, $lt: endOfDay } });
 
-      const doctor_count= await transaction_track.aggregate([
-        {
-          $match: {
-            hospital_id: new ObjectId(id)
-          }
-        },
-        {
-    $project: {
-      doctor_list: {
-        $filter: {
-          input: "$doctor_list",
-          as: "doctor",
-          cond: {
-            $eq: ["$$doctor.inserted_time",{ $gte: startOfDay, $lt: endOfDay }]
-          }
-        }
-      },
+  //     const doctor_count= await transaction_track.aggregate([
+  //       {
+  //         $match: {
+  //           hospital_id: new ObjectId(id)
+  //         }
+  //       },
+  //       {
+  //   $project: {
+  //     doctor_list: {
+  //       $filter: {
+  //         input: "$doctor_list",
+  //         as: "doctor",
+  //         cond: {
+  //           $eq: ["$$doctor.inserted_time",{ $gte: startOfDay, $lt: endOfDay }]
+  //         }
+  //       }
+  //     },
 
-    }
-  },
-        {
-    $addFields: {
-      doctor_count: { $size: "$doctor_list" },
-    }
-  }
-      ]).toArray();
+  //   }
+  // },
+  //       {
+  //   $addFields: {
+  //     doctor_count: { $size: "$doctor_list" },
+  //   }
+  // }
+  //     ]).toArray();
 
      // const doctor_count= await transaction_track.aggregate([
      //    {
@@ -1643,6 +1643,12 @@ app.get(
     //   }
     // }
     //   ]);
+
+
+    const doctor_count=await transaction_track.find({
+      hospital_id: new ObjectId(id),
+      doctor_list: { $elemMatch: { inserted_time: { $gte: startOfDay, $lt: endOfDay } } }
+});
     
     return res.json({record_count,doctor_count});
   }
