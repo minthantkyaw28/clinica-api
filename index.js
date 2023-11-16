@@ -1560,13 +1560,16 @@ app.get(
     const endOfDay = new Date(date_time);
     endOfDay.setUTCHours(23, 59, 59, 999);
 
-    const data = await medical_records
-        .aggregate([
-        {
-          $match: {  hospital_clinic_id: new ObjectId(id), record_created_date:{ $gte: startOfDay, $lt: endOfDay } }
-        },
-      ])
-      .toArray();
+    // const data = await medical_records
+    //     .aggregate([
+    //     {
+    //       $match: {  hospital_clinic_id: new ObjectId(id), record_created_date:{ $gte: startOfDay, $lt: endOfDay } }
+    //     },
+    //   ])
+    //   .toArray();
+
+       const data = await medical_records
+        .countDocuments({ hospital_clinic_id: new ObjectId(id), record_created_date:{ $gte: startOfDay, $lt: endOfDay } });
 
     return res.json(data);
   }
