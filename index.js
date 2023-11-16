@@ -1313,13 +1313,13 @@ app.post(
          //add patient_id to hospital's  patient list
          await hospitals_clinics.updateOne(
            { _id: new ObjectId(id) },
-           { $addToSet: { patient_list: new ObjectId(patient_id) } }
+           { $push: { patient_list: new ObjectId(patient_id) } }
          );
          //add patient_id to hospital' stransaction_track patient list
          await transaction_track.updateOne(
            { hospital_id: new ObjectId(id) },
            {
-             $addToSet: {
+             $push: {
                patient_list: new Object({
                  patient_id: new ObjectId(patient_id),
                  inserted_time: new Date(),
@@ -1387,13 +1387,13 @@ app.post(
       //add doctor_id to hospital's available doctor list
       const data = await hospitals_clinics.updateOne(
         { _id: new ObjectId(id) },
-        { $addToSet: { available_doctor_list: new ObjectId(doctor_id) } }
+        { $push: { available_doctor_list: new ObjectId(doctor_id) } }
       );
       //add doctor_id to hospital' stransaction_track doctor  list
       await transaction_track.updateOne(
         { hospital_id: new ObjectId(id) },
         {
-          $addToSet: {
+          $push: {
             doctor_list: new Object({
               doctor_id: new ObjectId(doctor_id),
               inserted_time: new Date(),
@@ -1420,7 +1420,7 @@ app.post(
         await hospitals_clinics.updateOne(
           { _id: new ObjectId(id) },
           {
-            $addToSet: {
+            $push: {
               available_doctor_list: new ObjectId(doctor_id),
             },
           }
@@ -1429,7 +1429,7 @@ app.post(
         const result = await transaction_track.updateOne(
           { hospital_id: new ObjectId(id) },
           {
-            $addToSet: {
+            $push: {
               doctor_list: new Object({
                 doctor_id: new ObjectId(doctor_id),
                 inserted_time: new Date(),
@@ -1458,7 +1458,7 @@ app.post(
       await hospitals_clinics.updateOne(
         { _id: new ObjectId(id) },
         {
-          $addToSet: {
+          $push: {
             patient_list: new ObjectId(patient_id),
           },
         }
@@ -1467,7 +1467,7 @@ app.post(
       const result = await transaction_track.updateOne(
         { hospital_id: new ObjectId(id) },
         {
-          $addToSet: {
+          $push: {
             patient_list: new Object({
               patient_id: new ObjectId(patient_id),
               inserted_time: new Date(),
