@@ -1598,7 +1598,7 @@ app.get(
   // }
   //     ]);
 
-     const doctor_count= await medical_records.aggregate([
+     const doctor_count= await transaction_track.aggregate([
         {
           $match: {
             hospital_id: new ObjectId(id)
