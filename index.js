@@ -814,7 +814,7 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
       //   month: "numeric",
       //   year: "numeric",
       // }),
-      record_created_date:new Date("<YYYY-mm-dd>"),
+      record_created_date:new Date(),
       patient_id: new ObjectId(patient_id),
       doctor_id: new ObjectId(doctor_id),
       hospital_clinic_id: new ObjectId(hospital_clinic_id),
@@ -1317,7 +1317,7 @@ app.post(
              $addToSet: {
                patient_list: new Object({
                  patient_id: new ObjectId(patient_id),
-                 inserted_time: new Date().toLocaleDateString(),
+                 inserted_time: new Date(),
                }),
              },
            }
@@ -1390,7 +1390,7 @@ app.post(
           $addToSet: {
             doctor_list: new Object({
               doctor_id: new ObjectId(doctor_id),
-              inserted_time: new Date().toLocaleDateString(),
+              inserted_time: new Date(),
             }),
           },
         }
@@ -1426,7 +1426,7 @@ app.post(
             $addToSet: {
               doctor_list: new Object({
                 doctor_id: new ObjectId(doctor_id),
-                inserted_time: new Date().toLocaleDateString(),
+                inserted_time: new Date(),
               }),
             },
           }
@@ -1464,7 +1464,7 @@ app.post(
           $addToSet: {
             patient_list: new Object({
               patient_id: new ObjectId(patient_id),
-              inserted_time: new Date().toLocaleDateString(),
+              inserted_time: new Date(),
             }),
           },
         }
@@ -1551,7 +1551,7 @@ app.get(
     const data = await medical_records
         .aggregate([
         {
-          $match: {  hospital_clinic_id: new ObjectId(id), record_created_date:ISODate(date_time) }
+          $match: {  hospital_clinic_id: new ObjectId(id), record_created_date:{$lte:new Date(date_time)} }
         },
       ])
       .toArray();
