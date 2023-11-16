@@ -1583,10 +1583,10 @@ app.get(
         .countDocuments({ hospital_clinic_id: new ObjectId(id), record_created_date:{ $gte: startOfDay, $lt: endOfDay } });
 
     const doctor_count=await doctor_transactions
-      .countDocuments({ hospital_clinic_id: new ObjectId(id), inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
+      .countDocuments({ hospital_id: new ObjectId(id), inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
 
     const patient_count=await patient_transactions
-    .countDocuments({ hospital_clinic_id: new ObjectId(id), inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
+    .countDocuments({ hospital_id: new ObjectId(id), inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
 
 
     
