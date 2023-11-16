@@ -1553,10 +1553,16 @@ app.get(
     const { id } = req.params;
     const { date_time } = req.body;
 
+    const startOfDay = new Date(date_time);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date_time);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
     const data = await medical_records
         .aggregate([
         {
-          $match: {  hospital_clinic_id: new ObjectId(id), record_created_date:{$in:[new Date(date_time)]} }
+          $match: {  hospital_clinic_id: new ObjectId(id), record_created_date:{ $gte: startOfDay, $lt: endOfDay } }
         },
       ])
       .toArray();
