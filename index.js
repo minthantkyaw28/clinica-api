@@ -1331,7 +1331,7 @@ app.post(
          //   }
          // );
 
-      const result = await patient_transactions.insertOne(
+      const trans_result = await patient_transactions.insertOne(
         { hospital_id: new ObjectId(id), 
          patient_id: new ObjectId(patient_id), 
          inserted_time: new Date(), });
@@ -1410,7 +1410,7 @@ app.post(
       //   }
       // );
 
-      const result = await doctor_transactions.insertOne(
+      const trans_result = await doctor_transactions.insertOne(
         { hospital_id: new ObjectId(id), 
          doctor_id: new ObjectId(doctor_id), 
          inserted_time: new Date(), });
