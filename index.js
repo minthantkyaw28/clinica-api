@@ -838,23 +838,23 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
     //here add newly created ID of a medical record to the Patient Profile's Patient Medical Record Array
     await patients.updateOne(
       { _id: new ObjectId(patient_id) },
-      { $push: { patient_medical_records: new ObjectId(result.insertedId) } }
+      { $addToSet: { patient_medical_records: new ObjectId(result.insertedId) } }
     );
 
      await patients.updateOne(
        { _id: new ObjectId(patient_id) },
-       { $push: { visited_doctor_list: new ObjectId(doctor_id) } }
+       { $addToSet: { visited_doctor_list: new ObjectId(doctor_id) } }
      );
 
       await patients.updateOne(
         { _id: new ObjectId(patient_id) },
-        { $push: { visited_hospital_clinic_list: new ObjectId(hospital_clinic_id) } }
+        { $addToSet: { visited_hospital_clinic_list: new ObjectId(hospital_clinic_id) } }
       );
 
       await doctors.updateOne(
         { _id: new ObjectId(doctor_id) },
         {
-          $push: {
+          $addToSet: {
             patient_list: new ObjectId(patient_id),
           },
         }
@@ -863,7 +863,7 @@ app.post("/medical_records", doctor_auth, async function (req, res) {
       await hospitals_clinics.updateOne(
         { _id: new ObjectId(hospital_clinic_id) },
         {
-          $push: {
+          $addToSet: {
             patient_list: new ObjectId(patient_id),
           },
         }
@@ -1286,6 +1286,7 @@ app.post(
     };
 
     const user_data = {
+      created_date: new Date(),
       patient_nrc: nrc,
       patient_name: name,
       patient_email: email,
@@ -1301,7 +1302,6 @@ app.post(
       visited_doctor_list: [],
       visited_hospital_clinic_list: [],
       patient_password: hashed_password,
-      role: "patient",
       patient_medical_records: [],
     };
 
@@ -1367,6 +1367,7 @@ app.post(
     let hashed_password = await bcrypt.hash(password, 10);
 
     const doctor_data = {
+      created_date: new Date(),
       doctor_nrc: nrc,
       doctor_name: name,
       doctor_email: email,
@@ -1762,6 +1763,7 @@ app.post("/patients",admin_auth, async function (req, res) {
   };
 
   const user_data = {
+    created_date: new Date(),
     patient_nrc: nrc,
     patient_name: name,
     patient_email: email,
@@ -1777,9 +1779,7 @@ app.post("/patients",admin_auth, async function (req, res) {
     visited_doctor_list: [],
     visited_hospital_clinic_list: [],
     patient_password: hashed_password,
-    role: "patient",
     patient_medical_records: [],
-    created_time:new Date().toLocaleString(),
   };
 
   const result = await patients.insertOne(user_data);
@@ -1879,6 +1879,7 @@ app.post("/doctors", admin_auth, async function (req, res) {
   let hashed_password = await bcrypt.hash(password, 10);
 
   const doctor_data = {
+    created_date: new Date(),
     doctor_nrc: nrc,
     doctor_name: name,
     doctor_email: email,
@@ -1888,7 +1889,6 @@ app.post("/doctors", admin_auth, async function (req, res) {
     assigned_clinic_hospital: [],
     patient_list: [],
     doctor_password: hashed_password,
-    created_time:new Date().toLocaleString(),
   };
 
   const result = await doctors.insertOne(doctor_data);
@@ -1979,6 +1979,7 @@ app.post("/hospital_clinic", admin_auth, async function (req, res) {
   let hashed_password = await bcrypt.hash(password, 10);
 
   const hospital_clinic_data = {
+    created_date: new Date(),
     hospital_clinic_name: name,
     hospital_clinic_email: email,
     hospital_clinic_phone: phone,
@@ -1986,7 +1987,6 @@ app.post("/hospital_clinic", admin_auth, async function (req, res) {
     available_doctor_list: [],
     patient_list: [],
     hospitals_clinics_password: hashed_password,
-    created_time:new Date().toLocaleString(),
   };
 
   const result = await hospitals_clinics.insertOne(hospital_clinic_data);
