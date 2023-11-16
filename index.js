@@ -1598,6 +1598,28 @@ app.get(
   // }
   //     ]);
 
+     // const doctor_count= await transaction_track.aggregate([
+     //    {
+     //      $match: {
+     //        hospital_id: new ObjectId(id)
+     //      }
+     //    },
+     //    {
+     //      $unwind: "$doctor_list"
+     //    },
+     //    {
+     //      $match: {
+     //        "doctor_list.inserted_time": { $gte: startOfDay, $lt: endOfDay }
+     //      }
+     //    },
+     //    {
+     //      $group: {
+     //        _id: "$_id",
+     //        doctorCount: { $sum: 1 }
+     //      }
+     //    }
+     //  ]);
+
      const doctor_count= await transaction_track.aggregate([
         {
           $match: {
@@ -1605,19 +1627,21 @@ app.get(
           }
         },
         {
-          $unwind: "$doctor_list"
-        },
-        {
-          $match: {
-            "doctor_list.inserted_time": { $gte: startOfDay, $lt: endOfDay }
-          }
-        },
-        {
-          $group: {
-            _id: "$_id",
-            doctorCount: { $sum: 1 }
-          }
+          $project: {
+            doctor_list: {
+              $filter: {
+                input: "$doctor_list",
+                as: "doctor",
+                cond: {
+                  $and: [
+                    { $gte: ["$$doctor.inserted_time", startOfDay] },
+                    { $lt: ["$$doctor.inserted_time", endOfDay] }
+                  ]
+                }
+            }
         }
+      }
+    }
       ]);
     
     return res.json({record_count,doctor_count});
