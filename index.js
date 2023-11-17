@@ -2098,7 +2098,7 @@ app.post("/hospital_clinic", admin_auth, async function (req, res) {
 //Search cost_count_by_day using hospital_id and date time 
 app.get(
   "/cost_count_by_day_of_hospital_at_admin/:id",
-  hospital_auth,
+  admin_auth,
   async function (req, res) {
     const { id } = req.params;
     const { date_time } = req.body;
@@ -2137,7 +2137,7 @@ app.get(
 //Search cost_count_by_month using hospital_id and date time 
 app.get(
   "/cost_count_by_month_of_hospital_at_admin/:id",
-  hospital_auth,
+  admin_auth,
   async function (req, res) {
     const { id } = req.params;
     const { date_time } = req.body;
@@ -2179,7 +2179,7 @@ endOfMonth.setUTCHours(23, 59, 59, 999);
 //Search total cost count_by_day 
 app.get(
   "/total_cost_count_by_day_admin",
-  hospital_auth,
+  admin_auth,
   async function (req, res) {
   
     const { date_time } = req.body;
@@ -2219,7 +2219,7 @@ app.get(
 //Search total cost_count_by_month
 app.get(
   "/total_cost_count_by_month_admin",
-  hospital_auth,
+  admin_auth,
   async function (req, res) {
    
     const { date_time } = req.body;
