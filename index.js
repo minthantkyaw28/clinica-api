@@ -2097,11 +2097,11 @@ app.post("/hospital_clinic", admin_auth, async function (req, res) {
 
 //Search cost_count_by_day using hospital_id and date time 
 app.post(
-  "/cost_count_by_day_of_hospital_at_admin/:id",
+  "/cost_count_by_day_of_hospital_at_admin",
   admin_auth,
   async function (req, res) {
-    const { id } = req.params;
-    const { date_time } = req.body;
+    // const { id } = req.params;
+    const { date_time,id } = req.body;
 
     const startOfDay = new Date(date_time);
     startOfDay.setUTCHours(0, 0, 0, 0);
