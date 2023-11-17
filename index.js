@@ -2200,18 +2200,19 @@ app.get(
     const patient_count=await patient_transactions
     .countDocuments({ inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
 
+     const hospital_count=await hospitals_clinics.countDocuments({ created_date:{ $gte: startOfDay, $lt: endOfDay } });
+
     const cost = await exchange_rate.findOne({_id: new ObjectId("6556357623811c8ccaf2b21e")});
 
     const record_cost=record_count*cost.a_medical_record;
     const doctor_cost=doctor_count*cost.a_doctor;
     const patient_cost=patient_count*cost.a_patient;
 
-    const total_cost=record_cost+doctor_cost+patient_cost;
+  const hospital_cost=hospital_count*cost.a_hospital;
 
-
-
+    const total_cost=record_cost+doctor_cost+patient_cost+hospital_cost;
     
-    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+    return res.json({record_count,doctor_count,patient_count,record_cost,hospital_count,doctor_cost,patient_cost,hospital_cost,total_cost});
   }
 );
 
@@ -2245,15 +2246,18 @@ endOfMonth.setUTCHours(23, 59, 59, 999);
     const patient_count=await patient_transactions
     .countDocuments({ inserted_time:{ $gte: startOfMonth, $lt: endOfMonth } });
 
+    const hospital_count=await hospitals_clinics.countDocuments({ created_date:{ $gte: startOfMonth, $lt: endOfMonth } });
+
      const cost = await exchange_rate.findOne({_id: new ObjectId("6556357623811c8ccaf2b21e")});
 
     const record_cost=record_count*cost.a_medical_record;
     const doctor_cost=doctor_count*cost.a_doctor;
     const patient_cost=patient_count*cost.a_patient;
+    const hospital_cost=hospital_count*cost.a_hospital;
 
-    const total_cost=record_cost+doctor_cost+patient_cost;
+    const total_cost=record_cost+doctor_cost+patient_cost+hospital_cost;
     
-    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+    return res.json({record_count,doctor_count,patient_count,record_cost,hospital_count,doctor_cost,patient_cost,hospital_cost,total_cost});
   }
 );
 
