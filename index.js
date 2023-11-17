@@ -1590,7 +1590,18 @@ app.get(
 
 
     
-    return res.json({record_count,doctor_count,patient_count});
+     const cost = await exchange_rate.findOne({_id: new ObjectId("6556357623811c8ccaf2b21e")});
+
+    const record_cost=record_count*cost.a_medical_record;
+    const doctor_cost=doctor_count*cost.a_doctor;
+    const patient_cost=patient_cost*cost.a_patient;
+
+    const total_cost=record_cost+doctor_cost+patient_cost;
+
+
+
+    
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
   }
 );
 
@@ -1630,7 +1641,18 @@ endOfMonth.setUTCHours(23, 59, 59, 999);
 
 
     
-    return res.json({record_count,doctor_count,patient_count});
+     const cost = await exchange_rate.findOne({_id: new ObjectId("6556357623811c8ccaf2b21e")});
+
+    const record_cost=record_count*cost.a_medical_record;
+    const doctor_cost=doctor_count*cost.a_doctor;
+    const patient_cost=patient_cost*cost.a_patient;
+
+    const total_cost=record_cost+doctor_cost+patient_cost;
+
+
+
+    
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
   }
 );
 
@@ -2069,6 +2091,89 @@ app.post("/hospital_clinic", admin_auth, async function (req, res) {
 
   return res.status(201).json(result);
 });
+
+
+//Search cost_count_by_day using hospital_id and date time 
+app.get(
+  "/cost_count_by_day_of_hospital_at_admin/:id",
+  hospital_auth,
+  async function (req, res) {
+    const { id } = req.params;
+    const { date_time } = req.body;
+
+    const startOfDay = new Date(date_time);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date_time);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
+
+       const record_count = await medical_records
+        .countDocuments({ hospital_clinic_id: new ObjectId(id), record_created_date:{ $gte: startOfDay, $lt: endOfDay } });
+
+    const doctor_count=await doctor_transactions
+      .countDocuments({ hospital_id: new ObjectId(id), inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
+
+    const patient_count=await patient_transactions
+    .countDocuments({ hospital_id: new ObjectId(id), inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
+
+    const cost = await exchange_rate.findOne({_id: new ObjectId("6556357623811c8ccaf2b21e")});
+
+    const record_cost=record_count*cost.a_medical_record;
+    const doctor_cost=doctor_count*cost.a_doctor;
+    const patient_cost=patient_cost*cost.a_patient;
+
+    const total_cost=record_cost+doctor_cost+patient_cost;
+
+
+
+    
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+  }
+);
+
+//Search cost_count_by_month using hospital_id and date time 
+app.get(
+  "/cost_count_by_month_of_hospital_at_admin/:id",
+  hospital_auth,
+  async function (req, res) {
+    const { id } = req.params;
+    const { date_time } = req.body;
+
+// Start of the month
+const startOfMonth = new Date(date_time);
+startOfMonth.setDate(1);
+startOfMonth.setUTCHours(0, 0, 0, 0);
+
+// End of the month
+const endOfMonth = new Date(date_time);
+endOfMonth.setMonth(endOfMonth.getMonth() + 1); // Move to the next month
+endOfMonth.setDate(0); // Set to the last day of the current month
+endOfMonth.setUTCHours(23, 59, 59, 999);
+  
+
+       const record_count = await medical_records
+        .countDocuments({ hospital_clinic_id: new ObjectId(id), record_created_date:{ $gte: startOfMonth, $lt: endOfMonth } });
+
+    const doctor_count=await doctor_transactions
+      .countDocuments({ hospital_id: new ObjectId(id), inserted_time:{ $gte: startOfMonth, $lt: endOfMonth } });
+
+    const patient_count=await patient_transactions
+    .countDocuments({ hospital_id: new ObjectId(id), inserted_time:{ $gte: startOfMonth, $lt: endOfMonth } });
+
+     const cost = await exchange_rate.findOne({_id: new ObjectId("6556357623811c8ccaf2b21e")});
+
+    const record_cost=record_count*cost.a_medical_record;
+    const doctor_cost=doctor_count*cost.a_doctor;
+    const patient_cost=patient_cost*cost.a_patient;
+
+    const total_cost=record_cost+doctor_cost+patient_cost;
+    
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+  }
+);
+
+
 
 
 
