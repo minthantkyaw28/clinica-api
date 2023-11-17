@@ -65,6 +65,8 @@ const admin = clinica_db.collection("admin");
 
 const doctor_transactions = clinica_db.collection("doctor_transactions");
 const patient_transactions = clinica_db.collection("patient_transactions");
+
+const exchange_rate = clinica_db.collection("exchange_rate");
 //Routes
 
 // =================================== Patient Endpoints  =================================== //
@@ -2172,6 +2174,91 @@ endOfMonth.setUTCHours(23, 59, 59, 999);
     return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
   }
 );
+
+
+//Search total cost count_by_day 
+app.get(
+  "/total_cost_count_by_day_admin",
+  hospital_auth,
+  async function (req, res) {
+  
+    const { date_time } = req.body;
+
+    const startOfDay = new Date(date_time);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date_time);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
+
+       const record_count = await medical_records
+        .countDocuments({ record_created_date:{ $gte: startOfDay, $lt: endOfDay } });
+
+    const doctor_count=await doctor_transactions
+      .countDocuments({ inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
+
+    const patient_count=await patient_transactions
+    .countDocuments({ inserted_time:{ $gte: startOfDay, $lt: endOfDay } });
+
+    const cost = await exchange_rate.findOne({_id: new ObjectId("6556357623811c8ccaf2b21e")});
+
+    const record_cost=record_count*cost.a_medical_record;
+    const doctor_cost=doctor_count*cost.a_doctor;
+    const patient_cost=patient_cost*cost.a_patient;
+
+    const total_cost=record_cost+doctor_cost+patient_cost;
+
+
+
+    
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+  }
+);
+
+
+//Search total cost_count_by_month
+app.get(
+  "/total_cost_count_by_month_admin",
+  hospital_auth,
+  async function (req, res) {
+   
+    const { date_time } = req.body;
+
+// Start of the month
+const startOfMonth = new Date(date_time);
+startOfMonth.setDate(1);
+startOfMonth.setUTCHours(0, 0, 0, 0);
+
+// End of the month
+const endOfMonth = new Date(date_time);
+endOfMonth.setMonth(endOfMonth.getMonth() + 1); // Move to the next month
+endOfMonth.setDate(0); // Set to the last day of the current month
+endOfMonth.setUTCHours(23, 59, 59, 999);
+  
+
+       const record_count = await medical_records
+        .countDocuments({ record_created_date:{ $gte: startOfMonth, $lt: endOfMonth } });
+
+    const doctor_count=await doctor_transactions
+      .countDocuments({ inserted_time:{ $gte: startOfMonth, $lt: endOfMonth } });
+
+    const patient_count=await patient_transactions
+    .countDocuments({ inserted_time:{ $gte: startOfMonth, $lt: endOfMonth } });
+
+     const cost = await exchange_rate.findOne({_id: new ObjectId("6556357623811c8ccaf2b21e")});
+
+    const record_cost=record_count*cost.a_medical_record;
+    const doctor_cost=doctor_count*cost.a_doctor;
+    const patient_cost=patient_cost*cost.a_patient;
+
+    const total_cost=record_cost+doctor_cost+patient_cost;
+    
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+  }
+);
+
+
+
 
 
 
