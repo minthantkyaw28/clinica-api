@@ -1596,7 +1596,7 @@ app.get(
 
     const record_cost=record_count*cost.a_medical_record;
     const doctor_cost=doctor_count*cost.a_doctor;
-    const patient_cost=patient_countt*cost.a_patient;
+    const patient_cost=patient_count*cost.a_patient;
 
     const total_cost=record_cost+doctor_cost+patient_cost;
 
