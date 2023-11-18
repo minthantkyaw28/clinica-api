@@ -826,10 +826,10 @@ app.get(
       return res.status(400).json({ msg: "required: something !!!" });
     }
 
-     const startOfDay = new Date(date_time);
+     const startOfDay = new Date(date);
     startOfDay.setUTCHours(0, 0, 0, 0);
 
-    const endOfDay = new Date(date_time);
+    const endOfDay = new Date(date);
     endOfDay.setUTCHours(23, 59, 59, 999);
 
     const data = await medical_records
