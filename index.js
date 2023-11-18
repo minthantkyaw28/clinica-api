@@ -219,12 +219,18 @@ app.get("/medical_records_with_date", auth, async function (req, res) {
     res.status(400).json({ msg: "required: something !!!" });
   }
 
+   const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
   try {
     const data = await medical_records
       .aggregate([
         {
           $match:{
-             record_created_date: new Date(date),
+             record_created_date: { $gte: startOfDay, $lt: endOfDay },
              patient_id: new ObjectId(patient_id),
           }
         }
@@ -773,10 +779,16 @@ app.get(
       return res.status(400).json({ msg: "required: something !!!" });
     }
 
+     const startOfDay = new Date(date_time);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date_time);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
     const data = await medical_records
       .aggregate([
         {
-          $match: { record_created_date: new Date(date), doctor_id:new ObjectId(doctor_id), hospital_clinic_id:new ObjectId(hospital_clinic_id) },
+          $match: { record_created_date: { $gte: startOfDay, $lt: endOfDay }, doctor_id:new ObjectId(doctor_id), hospital_clinic_id:new ObjectId(hospital_clinic_id) },
         },
         {
           $lookup: {
