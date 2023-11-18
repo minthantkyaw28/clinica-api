@@ -233,7 +233,54 @@ app.get("/medical_records_with_date", auth, async function (req, res) {
              record_created_date: { $gte: startOfDay, $lt: endOfDay },
              patient_id: new ObjectId(patient_id),
           }
-        }
+        },
+          {
+          $lookup: {
+            from: "patients",
+            localField: "patient_id",
+            foreignField: "_id",
+            as: "patient",
+          },
+        },
+        {
+          $unwind: "$patient",
+        },
+        {
+          $lookup: {
+            from: "doctors",
+            localField: "doctor_id",
+            foreignField: "_id",
+            as: "doctor",
+          },
+        },
+        {
+          $unwind: "$doctor",
+        },
+        {
+          $lookup: {
+            from: "hospitals_clinics",
+            localField: "hospital_clinic_id",
+            foreignField: "_id",
+            as: "hospital_clinic",
+          },
+        },
+        {
+          $unwind: "$hospital_clinic",
+        },
+        {
+          $addFields: {
+            patient_name: "$patient.patient_name",
+            doctor_name: "$doctor.doctor_name",
+            hospital_clinic_name: "$hospital_clinic.hospital_clinic_name",
+          },
+        },
+        {
+          $project: {
+            patient: 0,
+            doctor: 0,
+            hospital_clinic: 0,
+          },
+        },
       ])
       .toArray();
 
