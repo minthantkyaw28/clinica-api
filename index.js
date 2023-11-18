@@ -213,9 +213,9 @@ app.get("/medical_records", auth, async function (req, res) {
 //patient -> N medical record list with date Endpoint
 //auth,
 app.get("/medical_records_with_date", auth, async function (req, res) {
-  const { patient_id, limit, date } = req.body;
+  const { patient_id, date } = req.body;
 
-  if (!date || !patient_id || !limit) {
+  if (!patient_id || !limit) {
     res.status(400).json({ msg: "required: something !!!" });
   }
 
@@ -225,7 +225,6 @@ app.get("/medical_records_with_date", auth, async function (req, res) {
         record_created_date: new Date(date),
         patient_id: new ObjectId(patient_id),
       })
-      .limit(Number(limit))
       .toArray();
 
     return res.status(201).json(data);
@@ -753,6 +752,79 @@ app.get(
        return res.json({msg:"Smth wrong motherfucker"});
     }
     
+  }
+);
+
+
+//5
+//All Medical Records by single Doctor at Hospitals/Cinics By date Endpoint
+app.get(
+  "/list_of_medical_records_by_doctor_and_hospital_by_date",
+  doctor_auth,
+  async function (req, res) {
+    const { doctor_id, hospital_clinic_id, date } =
+      req.body;
+
+    if (!doctor_id || !hospital_clinic_id || !date ) {
+      return res.status(400).json({ msg: "required: something !!!" });
+    }
+
+    const data = await medical_records
+      .aggregate([
+        {
+          $match: { record_created_date: new Date(date), doctor_id:new ObjectId(doctor_id), hospital_clinic_id:new ObjectId(hospital_clinic_id) },
+        },
+        {
+          $lookup: {
+            from: "patients",
+            localField: "patient_id",
+            foreignField: "_id",
+            as: "patient",
+          },
+        },
+        {
+          $unwind: "$patient",
+        },
+        {
+          $lookup: {
+            from: "doctors",
+            localField: "doctor_id",
+            foreignField: "_id",
+            as: "doctor",
+          },
+        },
+        {
+          $unwind: "$doctor",
+        },
+        {
+          $lookup: {
+            from: "hospitals_clinics",
+            localField: "hospital_clinic_id",
+            foreignField: "_id",
+            as: "hospital_clinic",
+          },
+        },
+        {
+          $unwind: "$hospital_clinic",
+        },
+        {
+          $addFields: {
+            patient_name: "$patient.patient_name",
+            doctor_name: "$doctor.doctor_name",
+            hospital_clinic_name: "$hospital_clinic.hospital_clinic_name",
+          },
+        },
+        {
+          $project: {
+            patient: 0,
+            doctor: 0,
+            hospital_clinic: 0,
+          },
+        },
+      ])
+      .toArray();
+
+    return res.status(200).json(data);
   }
 );
 
