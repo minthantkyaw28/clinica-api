@@ -221,13 +221,17 @@ app.get("/medical_records_with_date", auth, async function (req, res) {
 
   try {
     const data = await medical_records
-      .find({
-        record_created_date: new Date(date),
-        patient_id: new ObjectId(patient_id),
-      })
+      .aggregate([
+        {
+          $match:{
+             record_created_date: new Date(date),
+             patient_id: new ObjectId(patient_id),
+          }
+        }
+      ])
       .toArray();
 
-    return res.status(201).json(data);
+    return res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ msg: error.message });
   }
