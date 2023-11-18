@@ -215,7 +215,7 @@ app.get("/medical_records", auth, async function (req, res) {
 app.get("/medical_records_with_date", auth, async function (req, res) {
   const { patient_id, date } = req.body;
 
-  if (!patient_id || !limit) {
+  if (!patient_id || !date) {
     res.status(400).json({ msg: "required: something !!!" });
   }
 
