@@ -1398,6 +1398,8 @@ app.post(
       sex,
       height,
       weight,
+      allergic,
+      history,
       password,
     } = req.body;
 
@@ -1412,11 +1414,18 @@ app.post(
       !sex ||
       !height ||
       !weight ||
+      !allergic ||
+      !history ||
       !password
     ) {
       return res.status(400).json({ msg: "required: something !!!" });
     }
 
+
+    const allergic_history=[];
+    const medical_history=[];
+    allergic_history.push(allergic);
+    medical_history.push(history);
     //hashing the password
     let hashed_password = await bcrypt.hash(password, 10);
 
