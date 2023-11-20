@@ -1422,8 +1422,8 @@ app.post(
     }
 
 
-    const allergic_history=[];
-    const medical_history=[];
+    let allergic_history=[];
+    let medical_history=[];
     allergic_history.push(allergic);
     medical_history.push(history);
     //hashing the password
@@ -1446,8 +1446,8 @@ app.post(
       patient_height: height,
       patient_weight: weight,
       patient_address: address || "",
-      allergic_history: [],
-      medical_history: [],
+      allergic_history: allergic_history,
+      medical_history: medical_history,
       visited_doctor_list: [],
       visited_hospital_clinic_list: [],
       patient_password: hashed_password,
