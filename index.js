@@ -1740,14 +1740,14 @@ app.post(
 
     const record_cost=record_count*cost.a_medical_record;
     const doctor_cost=doctor_count*cost.a_doctor;
-    const patient_cost=patient_count*cost.a_patient;
+    // const patient_cost=patient_count*cost.a_patient;
 
-    const total_cost=record_cost+doctor_cost+patient_cost;
+    const total_cost=record_cost+doctor_cost;
 
 
 
     
-    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,total_cost});
   }
 );
 
@@ -1791,14 +1791,14 @@ endOfMonth.setUTCHours(23, 59, 59, 999);
 
     const record_cost=record_count*cost.a_medical_record;
     const doctor_cost=doctor_count*cost.a_doctor;
-    const patient_cost=patient_count*cost.a_patient;
+    // const patient_cost=patient_count*cost.a_patient;
 
-    const total_cost=record_cost+doctor_cost+patient_cost;
+    const total_cost=record_cost+doctor_cost;
 
 
 
     
-    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,total_cost});
   }
 );
 
@@ -2267,14 +2267,14 @@ app.post(
 
     const record_cost=record_count*cost.a_medical_record;
     const doctor_cost=doctor_count*cost.a_doctor;
-    const patient_cost=patient_count*cost.a_patient;
+    // const patient_cost=patient_count*cost.a_patient;
 
-    const total_cost=record_cost+doctor_cost+patient_cost;
+    const total_cost=record_cost+doctor_cost;
 
 
 
     
-    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,total_cost});
   }
 );
 
@@ -2311,11 +2311,11 @@ endOfMonth.setUTCHours(23, 59, 59, 999);
 
     const record_cost=record_count*cost.a_medical_record;
     const doctor_cost=doctor_count*cost.a_doctor;
-    const patient_cost=patient_count*cost.a_patient;
+    // const patient_cost=patient_count*cost.a_patient;
 
-    const total_cost=record_cost+doctor_cost+patient_cost;
+    const total_cost=record_cost+doctor_cost;
     
-    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,patient_cost,total_cost});
+    return res.json({record_count,doctor_count,patient_count,record_cost,doctor_cost,total_cost});
   }
 );
 
@@ -2350,13 +2350,13 @@ app.post(
 
     const record_cost=record_count*cost.a_medical_record;
     const doctor_cost=doctor_count*cost.a_doctor;
-    const patient_cost=patient_count*cost.a_patient;
+    // const patient_cost=patient_count*cost.a_patient;
 
   const hospital_cost=hospital_count*cost.a_hospital;
 
-    const total_cost=record_cost+doctor_cost+patient_cost+hospital_cost;
+    const total_cost=record_cost+doctor_cost+hospital_cost;
     
-    return res.json({record_count,doctor_count,patient_count,record_cost,hospital_count,doctor_cost,patient_cost,hospital_cost,total_cost});
+    return res.json({record_count,doctor_count,patient_count,record_cost,hospital_count,doctor_cost,hospital_cost,total_cost});
   }
 );
 
@@ -2396,12 +2396,12 @@ endOfMonth.setUTCHours(23, 59, 59, 999);
 
     const record_cost=record_count*cost.a_medical_record;
     const doctor_cost=doctor_count*cost.a_doctor;
-    const patient_cost=patient_count*cost.a_patient;
+    // const patient_cost=patient_count*cost.a_patient;
     const hospital_cost=hospital_count*cost.a_hospital;
 
-    const total_cost=record_cost+doctor_cost+patient_cost+hospital_cost;
+    const total_cost=record_cost+doctor_cost+hospital_cost;
     
-    return res.json({record_count,doctor_count,patient_count,record_cost,hospital_count,doctor_cost,patient_cost,hospital_cost,total_cost});
+    return res.json({record_count,doctor_count,patient_count,record_cost,hospital_count,doctor_cost,hospital_cost,total_cost});
   }
 );
 
