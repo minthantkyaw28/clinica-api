@@ -919,8 +919,49 @@ app.get("/recent_medical_records", doctor_auth, async function (req, res) {
   return res.json(data);
 });
 
+
+//is doctor registered at this hospital ? Middleware 
+
+const doctor_reg_md = function (req, res, next) {
+  const { doctor_id, hospital_clinic_id } = req.body;
+
+  const ifdata=await doctor_transactions.findOne({
+    hospital_id: new ObjectId(hospital_clinic_id), 
+    doctor_id: new ObjectId(doctor_id)
+  });
+
+  if(ifdata===null){
+    const trans_result = await doctor_transactions.insertOne(
+        { hospital_id: new ObjectId(hospital_clinic_id), 
+         doctor_id: new ObjectId(doctor_id), 
+         inserted_time: new Date(), });
+    if(trans_result.insertedId) return next();
+     
+  }else{
+    return next();
+  }
+
+  // const trans_result = await doctor_transactions.insertOne(
+  //       { hospital_id: new ObjectId(id), 
+  //        doctor_id: new ObjectId(doctor_id), 
+  //        inserted_time: new Date(), });
+  
+
+  // if (!token) {
+  //   return res.status(401).json({ msg: "Token required" });
+  // }
+
+  // try {
+  //   let user = jwt.verify(token, secret_hospital_clinic);
+  //   res.locals.user = user;
+  //   next();
+  // } catch (err) {
+  //   return res.status(401).json({ msg: err.message });
+  // }
+};
+
 //Add medical record for a patient
-app.post("/medical_records", doctor_auth, async function (req, res) {
+app.post("/medical_records", doctor_auth,doctor_reg_md, async function (req, res) {
   const {
     patient_id,
     doctor_id,
