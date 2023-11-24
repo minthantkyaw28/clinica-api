@@ -922,7 +922,7 @@ app.get("/recent_medical_records", doctor_auth, async function (req, res) {
 
 //is doctor registered at this hospital ? Middleware 
 
-const doctor_reg_md = function (req, res, next) {
+const doctor_reg_md = async function (req, res, next) {
   const { doctor_id, hospital_clinic_id } = req.body;
 
   const ifdata=await doctor_transactions.findOne({
